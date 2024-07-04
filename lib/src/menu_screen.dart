@@ -15,87 +15,15 @@ class _MenuScreenState extends State<MenuScreen> {
   int _activeCategoryIndex = 0;
   bool _isProgrammaticScroll = false;
 
-  final List<GlobalKey> _categoryKeys = [
-    GlobalKey(),
-    GlobalKey(),
-    GlobalKey(),
-    GlobalKey(),
-  ];
+  final List<GlobalKey> _categoryKeys = List.generate(4, (_) => GlobalKey());
 
   final Map<String, List<Product>> products = {
-  'Черный кофе': [
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-  ],
-  'Кофе с молоком': [
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-  ],
-  'Чай': [
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-  ],
-  'Авторские напитки': [
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-    Product(
-        imageUrl: 'assets/images/coffee.png',
-        name: 'Олеато',
-        price: 139),
-  ],
+    'Черный кофе': List.generate(4, (_) => Product(imageUrl: 'assets/images/coffee.png', name: 'Олеато', price: 139)),
+    'Кофе с молоком': List.generate(4, (_) => Product(imageUrl: 'assets/images/coffee.png', name: 'Олеато', price: 139)),
+    'Чай': List.generate(4, (_) => Product(imageUrl: 'assets/images/coffee.png', name: 'Олеато', price: 139)),
+    'Авторские напитки': List.generate(4, (_) => Product(imageUrl: 'assets/images/coffee.png', name: 'Олеато', price: 139)),
   };
+
   @override
   void initState() {
     super.initState();
@@ -122,22 +50,15 @@ class _MenuScreenState extends State<MenuScreen> {
 
   bool _isBoxVisible(RenderBox box) {
     final boxOffset = box.localToGlobal(Offset.zero);
-    final screenHeight = MediaQuery.of(context).size.height;
-    return boxOffset.dy >= 0 && boxOffset.dy <= screenHeight;
+    return boxOffset.dy >= 0 && boxOffset.dy <= MediaQuery.of(context).size.height;
   }
 
   void _scrollToCategory(int index) async {
     final context = _categoryKeys[index].currentContext;
     if (context != null) {
-      setState(() {
-        _isProgrammaticScroll = true;
-      });
+      setState(() => _isProgrammaticScroll = true);
 
-      await Scrollable.ensureVisible(
-        context,
-        duration: Duration(milliseconds: 300),
-        alignment: 0.1,
-      );
+      await Scrollable.ensureVisible(context, duration: Duration(milliseconds: 300), alignment: 0.1);
 
       setState(() {
         _isProgrammaticScroll = false;
@@ -149,15 +70,10 @@ class _MenuScreenState extends State<MenuScreen> {
 
   void _scrollCategoryListToActive() {
     final categoryWidth = 100.0;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final offset = (_activeCategoryIndex * categoryWidth) - (screenWidth / 2) + (categoryWidth / 2);
-
-    final maxScrollExtent = _categoryScrollController.position.maxScrollExtent;
-    final minScrollExtent = _categoryScrollController.position.minScrollExtent;
-    final newOffset = offset.clamp(minScrollExtent, maxScrollExtent);
+    final offset = _activeCategoryIndex * categoryWidth;
 
     _categoryScrollController.animateTo(
-      newOffset,
+      offset.clamp(_categoryScrollController.position.minScrollExtent, _categoryScrollController.position.maxScrollExtent),
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
@@ -166,9 +82,7 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('CoffeeShop'),
-      ),
+      appBar: AppBar(title: Text('CoffeeShop')),
       body: Column(
         children: [
           Container(
@@ -179,26 +93,19 @@ class _MenuScreenState extends State<MenuScreen> {
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap: () {
-                    _scrollToCategory(index);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Chip(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      label: Text(
+                  onTap: () => _scrollToCategory(index),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: _activeCategoryIndex == index ? Colors.blue : Colors.grey[200],
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Center(
+                      child: Text(
                         categories[index],
-                        style: TextStyle(
-                          color: _activeCategoryIndex == index
-                              ? Colors.white
-                              : Colors.black,
-                        ),
+                        style: TextStyle(color: _activeCategoryIndex == index ? Colors.white : Colors.black),
                       ),
-                      backgroundColor: _activeCategoryIndex == index
-                          ? Colors.blue
-                          : Colors.white,
                     ),
                   ),
                 );
@@ -217,32 +124,14 @@ class _MenuScreenState extends State<MenuScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      MenuCategory(
-                        title: 'Черный кофе', 
-                        key: _categoryKeys[0], 
+                    children: List.generate(categories.length, (index) {
+                      return MenuCategory(
+                        title: categories[index],
+                        key: _categoryKeys[index],
                         activeCategoryColor: Colors.blue,
-                        items: products['Черный кофе']!, 
-                      ),
-                      MenuCategory(
-                        title: 'Кофе с молоком', 
-                        key: _categoryKeys[1], 
-                        activeCategoryColor: Colors.blue,
-                        items: products['Кофе с молоком']!, 
-                      ),
-                      MenuCategory(
-                        title: 'Чай', 
-                        key: _categoryKeys[2], 
-                        activeCategoryColor: Colors.blue,
-                        items: products['Чай']!, 
-                      ),
-                      MenuCategory(
-                        title: 'Авторские напитки', 
-                        key: _categoryKeys[3], 
-                        activeCategoryColor: Colors.blue,
-                        items: products['Авторские напитки']!, 
-                      ),
-                    ],
+                        items: products[categories[index]]!,
+                      );
+                    }),
                   ),
                 ),
               ),
