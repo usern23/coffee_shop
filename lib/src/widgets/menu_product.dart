@@ -36,8 +36,8 @@ class _MenuItemState extends State<MenuItem> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network(
-              widget.product.imageUrl,
+            Image.asset(
+              'assets/images/coffee.png',  
               height: 100,
               fit: BoxFit.cover,
             ),
@@ -48,14 +48,14 @@ class _MenuItemState extends State<MenuItem> {
             ),
             SizedBox(height: 8),
             Container(
-              height: 50, 
+              height: 50,
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 300),
                 child: quantity == 0
                     ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: widget.activeCategoryColor,
-                          minimumSize: Size(double.infinity, 40), 
+                          minimumSize: Size(double.infinity, 40),
                         ),
                         onPressed: addToCart,
                         child: Text('${widget.product.price} руб'),
@@ -66,7 +66,7 @@ class _MenuItemState extends State<MenuItem> {
                           Flexible(
                             child: Container(
                               width: 40,
-                              height: 40, 
+                              height: 40,
                               decoration: BoxDecoration(
                                 color: Colors.blue,
                                 shape: BoxShape.circle,
@@ -78,7 +78,7 @@ class _MenuItemState extends State<MenuItem> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 10), 
+                          SizedBox(width: 10),
                           Flexible(
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 8),
@@ -94,11 +94,11 @@ class _MenuItemState extends State<MenuItem> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 10), 
+                          SizedBox(width: 10),
                           Flexible(
                             child: Container(
-                              width: 40, 
-                              height: 40, 
+                              width: 40,
+                              height: 40,
                               decoration: BoxDecoration(
                                 color: Colors.blue,
                                 shape: BoxShape.circle,
